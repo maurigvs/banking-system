@@ -1,10 +1,10 @@
-package br.com.maurigvs.bankingsystem;
+package br.com.maurigvs.bank;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BankingSystemApplicationTests {
+class ApplicationTests {
 
     @Test
     void contextLoads() {
