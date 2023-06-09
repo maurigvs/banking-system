@@ -7,21 +7,21 @@ import java.util.Objects;
  */
 public class Person extends AccountHolder {
 
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
 
-    public Person(String firstName, String lastName, int idNumber) {
-        super(idNumber);
+    public Person(int cpf, String firstName, String lastName) {
+        super(cpf);
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
     @Override
@@ -29,13 +29,13 @@ public class Person extends AccountHolder {
         if (this == o) return true;
         if (!(o instanceof Person)) return false;
         Person person = (Person) o;
-        return Objects.equals(getIdNumber(), person.getIdNumber())
+        return Objects.equals(getId(), person.getId())
                 && Objects.equals(getFirstName(), person.getFirstName())
                 && Objects.equals(getLastName(), person.getLastName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdNumber(), getFirstName(), getLastName());
+        return Objects.hash(getId(), getFirstName(), getLastName());
     }
 }

@@ -6,9 +6,7 @@ import br.com.maurigvs.bank.account.ConsumerAccount;
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Bank implementation.
@@ -17,55 +15,53 @@ public class Bank implements BankInterface {
 
     private final LinkedHashMap<Long, Account> accounts = new LinkedHashMap<>();
 
-    public Bank() {}
-
-    private Account getAccount(Long accountNumber) {
-        return this.accounts.get(accountNumber);
+    @Override
+    public Long openCommercialAccount(Company company, int pinCode, double initialBalance) {
+        return openAccount(new CommercialAccount(generateAccountNumber(), company, pinCode, initialBalance));
     }
 
-    public Long openCommercialAccount(Company company, int pin, double startingDeposit) {
-        Long accountNumber = generateAccountNumber();
-        return openAccount(new CommercialAccount(company, accountNumber, pin, startingDeposit));
+    @Override
+    public Long openConsumerAccount(Person person, int pinCode, double initialBalance) {
+        return openAccount(new ConsumerAccount(generateAccountNumber(), person, pinCode, initialBalance));
     }
 
-    public Long openConsumerAccount(Person person, int pin, double startingDeposit) {
-        Long accountNumber = generateAccountNumber();
-        return openAccount(new ConsumerAccount(person, accountNumber, pin, startingDeposit));
+    @Override
+    public boolean authenticateUser(Long accountNumber, int pinCode) {
+        if(isValidAccount(accountNumber))
+            return accounts.get(accountNumber).validatePin(pinCode);
+        return false;
     }
 
-    private Long openAccount(Account account){
-        this.accounts.put(account.getAccountNumber(), account);
-        return account.getAccountNumber();
-    }
-
+    @Override
     public double getBalance(Long accountNumber) {
-        if(this.accounts.containsKey(accountNumber))
-            return this.accounts.get(accountNumber).getBalance();
+        if(isValidAccount(accountNumber))
+            return accounts.get(accountNumber).getBalance();
         return -1;
     }
 
+    @Override
     public void credit(Long accountNumber, double amount) {
-        this.accounts.get(accountNumber).creditAccount(amount);
+        if(isValidAccount(accountNumber))
+            accounts.get(accountNumber).credit(amount);
     }
 
+    @Override
     public boolean debit(Long accountNumber, double amount) {
-        return this.accounts.get(accountNumber).debitAccount(amount);
+        if(isValidAccount(accountNumber))
+            return accounts.get(accountNumber).debit(amount);
+        return false;
     }
 
-    public boolean authenticateUser(Long accountNumber, int pin) {
-        return this.accounts.get(accountNumber).validatePin(pin);
+    @Override
+    public void addAuthorizedUser(Long accountNumber, Person user) {
+        if(isValidCommercialAccount(accountNumber))
+            ((CommercialAccount) accounts.get(accountNumber)).addAuthorizedUser(user);
     }
 
-    public void addAuthorizedUser(Long accountNumber, Person authorizedPerson) {
-        Account account = getAccount(accountNumber);
-        if(account instanceof CommercialAccount)
-            ((CommercialAccount) account).addAuthorizedUser(authorizedPerson);
-    }
-
-    public boolean checkAuthorizedUser(Long accountNumber, Person authorizedPerson) {
-        Account account = getAccount(accountNumber);
-        if(account instanceof CommercialAccount)
-            return ((CommercialAccount) account).isAuthorizedUser(authorizedPerson);
+    @Override
+    public boolean checkAuthorizedUser(Long accountNumber, Person user) {
+        if(isValidCommercialAccount(accountNumber))
+            return ((CommercialAccount) accounts.get(accountNumber)).isAuthorizedUser(user);
         return false;
     }
 
@@ -73,14 +69,53 @@ public class Bank implements BankInterface {
      * This is mocked implementation. I couldn't finish in time.
      * @return
      */
+    @Override
     public Map<String, Double> getAverageBalanceReport() {
+
         Map<String, Double> report = new HashMap<>();
-        report.put(ConsumerAccount.class.getSimpleName(), 287.5);
-        report.put(CommercialAccount.class.getSimpleName(), 6172.5);
+        Map<String, List<Double>> reports = new HashMap<>();
+
+        for (Map.Entry<Long, Account> accountEntry : accounts.entrySet()) {
+            String accountType = accountEntry.getValue().getClass().getSimpleName();
+            Double accountBalance = accountEntry.getValue().getBalance();
+
+            if(reports.containsKey(accountType)){
+                List<Double> balances = new ArrayList<>();
+                balances.addAll(reports.get(accountType));
+                balances.add(accountBalance);
+                reports.replace(accountType, balances);
+            } else {
+                reports.put(accountType, Arrays.asList(accountBalance));
+            }
+        }
+
+        for (Map.Entry<String, List<Double>> reportEntry : reports.entrySet()) {
+            String accountType = reportEntry.getKey();
+            int totalAccounts = reportEntry.getValue().size();
+            Double totalBalance = new Double(0L);
+            for (Double balance : reportEntry.getValue())
+                totalBalance += balance;
+            Double averageBalance = totalBalance / totalAccounts;
+            report.put(accountType, averageBalance);
+        }
         return report;
     }
 
-    private Long generateAccountNumber(){
-        return (long) (this.accounts.size() + 1);
+    private Long openAccount(Account account){
+        Long accountNumber = account.getNumber();
+        accounts.put(accountNumber, account);
+        return accountNumber;
+    }
+
+    private boolean isValidAccount(Long accountNumber){
+        return accounts.containsKey(accountNumber);
+    }
+
+    private boolean isValidCommercialAccount(Long accountNumber){
+        return isValidAccount(accountNumber) && accounts.get(accountNumber) instanceof CommercialAccount;
+    }
+
+    private Long generateAccountNumber() {
+        return (long) (accounts.size() + 1);
     }
 }

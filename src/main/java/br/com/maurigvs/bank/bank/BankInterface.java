@@ -13,73 +13,76 @@ public interface BankInterface {
     /**
      * Creates a new commercial account.
      *
-     * @param company         The company associated with this account.
-     * @param pin             Account PIN.
-     * @param startingDeposit Initial funds deposited in this account.
-     * @return The account number for the newly created account.
+     * @param company           The company associated with this account.
+     * @param pinCode           Account PIN.
+     * @param initialBalance    Initial funds deposited in this account.
+     * @return                  The account number for the newly created account.
      */
-    public Long openCommercialAccount(Company company, int pin, double startingDeposit);
+    Long openCommercialAccount(Company company, int pinCode, double initialBalance);
 
     /**
      * Creates a new consumer account.
      *
-     * @param person          The person associated with this account.
-     * @param pin             Account PIN.
-     * @param startingDeposit Initial funds deposited in this account.
-     * @return The account number for the newly created account.
+     * @param person            The person associated with this account.
+     * @param pinCode           Account PIN.
+     * @param initialBalance    Initial funds deposited in this account.
+     * @return                  The account number for the newly created account.
      */
-    public Long openConsumerAccount(Person person, int pin, double startingDeposit);
+    Long openConsumerAccount(Person person, int pinCode, double initialBalance);
 
     /**
      * Check if PIN matches the account.
      *
-     * @param accountNumber The number of the account to be authenticated.
-     * @param pin           Account PIN to be used.
-     * @return <code>true</code> if authentication was successful; <code>false</code> otherwise.
+     * @param accountNumber     The number of the account to be authenticated.
+     * @param pinCode           Account PIN to be used.
+     * @return                  <code>true</code> if authentication was successful;
+     *                          <code>false</code> otherwise.
      */
-    public boolean authenticateUser(Long accountNumber, int pin);
+    boolean authenticateUser(Long accountNumber, int pinCode);
 
     /**
      * Retrieve balance for designated account.
      *
-     * @param accountNumber The number of the account.
-     * @return the balance of the account.
+     * @param accountNumber     The number of the account.
+     * @return                  The balance of the account.
      */
-    public double getBalance(Long accountNumber);
+    double getBalance(Long accountNumber);
 
     /**
      * Perform a credit in the designated account.
      *
-     * @param accountNumber The number of the account to be credited.
-     * @param amount        The amount of money being deposited.
+     * @param accountNumber     The number of the account to be credited.
+     * @param amount            The amount of money being deposited.
      */
-    public void credit(Long accountNumber, double amount);
+    void credit(Long accountNumber, double amount);
 
     /**
      * Perform a debit in the given account, if possible.
      *
-     * @param accountNumber The number of the account to be debited.
-     * @param amount        The desired amount of the debit.
-     * @return <code>true</code> if amount could be withdrawn; <code>false</code> otherwise.
+     * @param accountNumber     The number of the account to be debited.
+     * @param amount            The desired amount of the debit.
+     * @return                  <code>true</code> if amount could be withdrawn;
+     *                          <code>false</code> otherwise.
      */
-    public boolean debit(Long accountNumber, double amount);
+    boolean debit(Long accountNumber, double amount);
 
     /**
      * Add new authorized user to a (commercial) account.
      *
-     * @param accountNumber
-     * @param authorizedPerson
+     * @param accountNumber     The number of the commercial account.
+     * @param user              The person who is authorized to operate the account.
      */
-    public void addAuthorizedUser(Long accountNumber, Person authorizedPerson);
+    void addAuthorizedUser(Long accountNumber, Person user);
 
     /**
      * Check user is authorized for designated (commercial) account.
      *
-     * @param accountNumber
-     * @param authorizedPerson
-     * @return
+     * @param accountNumber     The number of the commercial account.
+     * @param user              The person who is wants to operate the account.
+     * @return                  <code>true</code> if person is authorized.
+     *                          <code>false</code> if otherwise.
      */
-    public boolean checkAuthorizedUser(Long accountNumber, Person authorizedPerson);
+    boolean checkAuthorizedUser(Long accountNumber, Person user);
 
     /**
      * Calculates the average account balance, grouped by Account type.
@@ -90,5 +93,5 @@ public interface BankInterface {
      * @return A Map with keys representing the Account type (e.g. 'ConsumerAccount', 'CommercialAccount')
      * and the values with the calculated average balance for those account types.
      */
-    public Map<String, Double> getAverageBalanceReport();
+    Map<String, Double> getAverageBalanceReport();
 }

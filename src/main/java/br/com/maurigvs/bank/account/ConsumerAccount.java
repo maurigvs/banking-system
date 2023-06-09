@@ -8,7 +8,7 @@ import br.com.maurigvs.bank.accountholder.Person;
  */
 public class ConsumerAccount extends Account {
 
-    public ConsumerAccount(Person person, Long accountNumber, int pin, double currentBalance) {
-        super(person, accountNumber, pin, currentBalance);
+    public ConsumerAccount(Long number, Person person, int pinCode, double initialBalance) {
+        super(number, person, pinCode, initialBalance);
     }
 }

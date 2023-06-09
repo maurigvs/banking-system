@@ -29,16 +29,16 @@ class SampleTest {
     @BeforeEach
     void setUp() {
         bank = new Bank();
-        person1 = new Person("John", "Doe", 1);
-        person2 = new Person("Julia", "Doe", 2);
-        person3 = new Person("Daniel", "Smith", 3);
+        person1 = new Person(1,"John", "Doe");
+        person2 = new Person(2,"Julia", "Doe");
+        person3 = new Person(3,"Daniel", "Smith");
         consumerAccountNr1 = bank.openConsumerAccount(person1, 1111, 0.0);
         consumerAccountNr2 = bank.openConsumerAccount(person2, 2222, 250.00);
         consumerAccountNr3 = bank.openConsumerAccount(person3, 3333, 600.00);
         consumerAccountNr4 = bank.openConsumerAccount(person3, 4444, 300.00);
 
-        Company company1 = new Company("BigCorp1", 1);
-        Company company2 = new Company("BigCorp2", 2);
+        Company company1 = new Company(1,"BigCorp1");
+        Company company2 = new Company(2,"BigCorp2");
         commercialAccountNr1 = bank.openCommercialAccount(company1, 1111, 0.0);
         commercialAccountNr2 = bank.openCommercialAccount(company2, 2222, 12345.00);
 
@@ -90,6 +90,7 @@ class SampleTest {
      */
     @Test
     void creditAccountTest() {
+
         double amount = 500.00;
         double initialBalance1 = bank.getBalance(consumerAccountNr1);
         double initialBalance2 = bank.getBalance(consumerAccountNr2);
@@ -113,7 +114,6 @@ class SampleTest {
     @Test
     void transactionDebitTest() throws Exception {
         Transaction transaction1 = new Transaction(bank, consumerAccountNr3, 3333);
-        double beforeDeposit1 = transaction1.getBalance();
         double amount = 500.0;
 
         assertTrue("Debit was unsuccessful.", transaction1.debit(amount));

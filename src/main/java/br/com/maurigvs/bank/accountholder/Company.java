@@ -2,14 +2,14 @@ package br.com.maurigvs.bank.accountholder;
 
 public class Company extends AccountHolder {
 
-    private String companyName;
+    private final String companyName;
 
-    public Company(String companyName, int taxId) {
-        super(taxId);
+    public Company(int cnpj, String companyName) {
+        super(cnpj);
         this.companyName = companyName;
     }
 
     public String getCompanyName() {
-        return this.companyName;
+        return companyName;
     }
 }

@@ -5,16 +5,16 @@ package br.com.maurigvs.bank.accountholder;
  */
 public abstract class AccountHolder {
 
-    private int idNumber;
+    private final int id;
 
     /**
-     * @param idNumber The holder unique ID.
+     * @param id The holder unique ID.
      */
-    protected AccountHolder(int idNumber) {
-        this.idNumber = idNumber;
+    protected AccountHolder(int id) {
+        this.id = id;
     }
 
-    public int getIdNumber() {
-        return idNumber;
+    public int getId() {
+        return id;
     }
 }
