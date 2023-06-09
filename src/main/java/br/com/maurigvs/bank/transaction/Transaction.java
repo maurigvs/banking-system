@@ -1,37 +1,53 @@
 package br.com.maurigvs.bank.transaction;
 
 import br.com.maurigvs.bank.bank.BankInterface;
+import br.com.maurigvs.bank.exception.AuthenticationException;
+import br.com.maurigvs.bank.exception.MissingDataException;
 
 /**
  * A bank transaction implementation.
  */
 public class Transaction implements TransactionInterface {
 
-    private Long accountNumber;
-    private BankInterface bank;
+    private final BankInterface bank;
+    private final Long accountNumber;
 
     /**
+     *
      * @param bank          The bank where the account is housed.
      * @param accountNumber The customer's account number.
-     * @param attemptedPin  The PIN entered by the customer.
-     * @throws Exception Account validation failed.
+     * @param pinCode       The PIN entered by the customer.
+     * @throws AuthenticationException   Account validation failed.
      */
-    public Transaction(BankInterface bank, Long accountNumber, int attemptedPin) throws Exception {
+    public Transaction(BankInterface bank, Long accountNumber, int pinCode) {
+        checkArguments(bank, accountNumber, pinCode);
         this.bank = bank;
         this.accountNumber = accountNumber;
-        if(!this.bank.authenticateUser(accountNumber, attemptedPin))
-            throw new Exception("Account validation failed");
+        authenticateUser(pinCode);
     }
 
+    @Override
     public double getBalance() {
-        return this.bank.getBalance(this.accountNumber);
+        return bank.getBalance(accountNumber);
     }
 
+    @Override
     public void credit(double amount) {
-        this.bank.credit(this.accountNumber, amount);
+        bank.credit(accountNumber, amount);
     }
 
+    @Override
     public boolean debit(double amount) {
-        return this.bank.debit(this.accountNumber, amount);
+        return bank.debit(accountNumber, amount);
+    }
+
+    private void checkArguments(BankInterface bank, Long accountNumber, int pinCode) {
+        if(bank == null || accountNumber == null || pinCode == 0)
+            throw new MissingDataException();
+    }
+
+    private void authenticateUser(int pinCode) {
+        if(!this.bank.authenticateUser(this.accountNumber, pinCode))
+            throw new AuthenticationException();
     }
 }

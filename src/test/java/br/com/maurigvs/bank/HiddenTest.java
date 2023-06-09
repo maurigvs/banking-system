@@ -6,6 +6,8 @@ import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
 import br.com.maurigvs.bank.bank.Bank;
 import br.com.maurigvs.bank.bank.BankInterface;
+import br.com.maurigvs.bank.exception.AuthenticationException;
+import br.com.maurigvs.bank.exception.MissingDataException;
 import br.com.maurigvs.bank.transaction.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,81 +18,83 @@ import static org.junit.jupiter.api.Assertions.*;
 class HiddenTest {
 
     BankInterface bank;
-    Long consumerAccountNr1;
-    Long consumerAccountNr2;
-    Long consumerAccountNr3;
-    Long consumerAccountNr4;
-    Long commercialAccountNr1;
-    Long commercialAccountNr2;
-    Person person1;
-    Person person2;
-    Person person3;
+    Long johnDoeAccount;
+    Long juliaDoeAccount;
+    Long danielSmithAccount1;
+    Long danielSmithAccount2;
+    Long bigCorp1Account;
+    Long bigCorp2Account;
+    Person johnDoe;
+    Person juliaDoe;
+    Person danielSmith;
 
     @BeforeEach
     void setUp() {
         bank = new Bank();
-        person1 = new Person("John", "Doe", 1);
-        person2 = new Person("Julia", "Doe", 2);
-        person3 = new Person("Daniel", "Smith", 3);
-        consumerAccountNr1 = bank.openConsumerAccount(person1, 1111, 0.0);
-        consumerAccountNr2 = bank.openConsumerAccount(person2, 2222, 250.00);
-        consumerAccountNr3 = bank.openConsumerAccount(person3, 3333, 600.00);
-        consumerAccountNr4 = bank.openConsumerAccount(person3, 4444, 300.00);
+        johnDoe = new Person(1,"John", "Doe");
+        juliaDoe = new Person(2,"Julia", "Doe");
+        danielSmith = new Person(3,"Daniel", "Smith");
 
-        Company company1 = new Company("BigCorp1", 1);
-        Company company2 = new Company("BigCorp2", 2);
-        commercialAccountNr1 = bank.openCommercialAccount(company1, 1111, 0.0);
-        commercialAccountNr2 = bank.openCommercialAccount(company2, 2222, 12345.00);
+        johnDoeAccount = bank.openConsumerAccount(johnDoe, 1111, 0.0);
+        juliaDoeAccount = bank.openConsumerAccount(juliaDoe, 2222, 250.00);
+        danielSmithAccount1 = bank.openConsumerAccount(danielSmith, 3333, 600.00);
+        danielSmithAccount2 = bank.openConsumerAccount(danielSmith, 4444, 300.00);
 
-        bank.addAuthorizedUser(commercialAccountNr1, person1);
-        bank.addAuthorizedUser(commercialAccountNr1, person2);
-        bank.addAuthorizedUser(commercialAccountNr2, person3);
+        Company bigCorp1 = new Company(1,"BigCorp1");
+        Company bigCorp2 = new Company(2, "BigCorp2");
+
+        bigCorp1Account = bank.openCommercialAccount(bigCorp1, 1111, 0.0);
+        bigCorp2Account = bank.openCommercialAccount(bigCorp2, 2222, 12345.00);
+
+        bank.addAuthorizedUser(bigCorp1Account, johnDoe);
+        bank.addAuthorizedUser(bigCorp1Account, juliaDoe);
+        bank.addAuthorizedUser(bigCorp2Account, danielSmith);
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         bank = null;
-        consumerAccountNr1 = null;
-        consumerAccountNr2 = null;
-        consumerAccountNr3 = null;
-        commercialAccountNr1 = null;
-        commercialAccountNr2 = null;
+        johnDoeAccount = null;
+        juliaDoeAccount = null;
+        danielSmithAccount1 = null;
+        bigCorp1Account = null;
+        bigCorp2Account = null;
     }
 
     @Test
     void checkAuthorizedUserTest() {
-        assertTrue(bank.checkAuthorizedUser(commercialAccountNr1, new Person("John", "Doe", 1)));
-        assertTrue(bank.checkAuthorizedUser(commercialAccountNr1, person1));
-        assertTrue(bank.checkAuthorizedUser(commercialAccountNr1, person2));
-        assertTrue(bank.checkAuthorizedUser(commercialAccountNr2, person3));
+        assertTrue(bank.checkAuthorizedUser(bigCorp1Account, new Person(1, "John", "Doe")));
+        assertTrue(bank.checkAuthorizedUser(bigCorp1Account, johnDoe));
+        assertTrue(bank.checkAuthorizedUser(bigCorp1Account, juliaDoe));
+        assertTrue(bank.checkAuthorizedUser(bigCorp2Account, danielSmith));
     }
 
     @Test
     void checkUnauthorizedUserTest() {
-        assertFalse(bank.checkAuthorizedUser(commercialAccountNr1, new Person("John", "Doe", 2)));
-        assertFalse(bank.checkAuthorizedUser(commercialAccountNr1, null));
-        assertFalse(bank.checkAuthorizedUser(commercialAccountNr1, person3));
-        assertFalse(bank.checkAuthorizedUser(commercialAccountNr2, person1));
-        assertFalse(bank.checkAuthorizedUser(consumerAccountNr1, person1));
-        assertFalse(bank.checkAuthorizedUser(Long.MAX_VALUE, person1));
-        assertFalse(bank.checkAuthorizedUser(null, person1));
+        assertFalse(bank.checkAuthorizedUser(bigCorp1Account, new Person(2, "John", "Doe")));
+        assertFalse(bank.checkAuthorizedUser(bigCorp1Account, null));
+        assertFalse(bank.checkAuthorizedUser(bigCorp1Account, danielSmith));
+        assertFalse(bank.checkAuthorizedUser(bigCorp2Account, johnDoe));
+        assertFalse(bank.checkAuthorizedUser(johnDoeAccount, johnDoe));
+        assertFalse(bank.checkAuthorizedUser(Long.MAX_VALUE, johnDoe));
+        assertFalse(bank.checkAuthorizedUser(null, johnDoe));
     }
 
     @Test
     void sequentialAccountNumberTest() {
-        assertEquals(consumerAccountNr1 + 1, (long) consumerAccountNr2);
-        assertEquals(consumerAccountNr2 + 1, (long) consumerAccountNr3);
-        assertEquals(consumerAccountNr4 + 1, (long) commercialAccountNr1);
-        assertEquals(commercialAccountNr1 + 1, (long) commercialAccountNr2);
+        assertEquals(johnDoeAccount + 1, (long) juliaDoeAccount);
+        assertEquals(juliaDoeAccount + 1, (long) danielSmithAccount1);
+        assertEquals(danielSmithAccount2 + 1, (long) bigCorp1Account);
+        assertEquals(bigCorp1Account + 1, (long) bigCorp2Account);
     }
 
     @Test
     void validBalanceTest() {
-        assertEquals(0.0, bank.getBalance(consumerAccountNr1), 0);
-        assertEquals(250.00, bank.getBalance(consumerAccountNr2), 0);
-        assertEquals(600.00, bank.getBalance(consumerAccountNr3), 0);
-        assertEquals(0.0, bank.getBalance(commercialAccountNr1), 0);
-        assertEquals(12345.00, bank.getBalance(commercialAccountNr2), 0);
+        assertEquals(0.0, bank.getBalance(johnDoeAccount), 0);
+        assertEquals(250.00, bank.getBalance(juliaDoeAccount), 0);
+        assertEquals(600.00, bank.getBalance(danielSmithAccount1), 0);
+        assertEquals(0.0, bank.getBalance(bigCorp1Account), 0);
+        assertEquals(12345.00, bank.getBalance(bigCorp2Account), 0);
     }
 
     @Test
@@ -104,9 +108,9 @@ class HiddenTest {
     @Test
     void validDebitTest() {
         double amount = 200.0;
-        assertTrue(bank.debit(consumerAccountNr2, amount), "Account " + consumerAccountNr2 + " should have sufficient funds.");
-        assertTrue(bank.debit(consumerAccountNr3, amount), "Account " + consumerAccountNr3 + " should have sufficient funds.");
-        assertTrue(bank.debit(commercialAccountNr2, amount), "Account " + commercialAccountNr2 + " should have sufficient funds.");
+        assertTrue(bank.debit(juliaDoeAccount, amount), "Account " + juliaDoeAccount + " should have sufficient funds.");
+        assertTrue(bank.debit(danielSmithAccount1, amount), "Account " + danielSmithAccount1 + " should have sufficient funds.");
+        assertTrue(bank.debit(bigCorp2Account, amount), "Account " + bigCorp2Account + " should have sufficient funds.");
     }
 
     /**
@@ -115,8 +119,8 @@ class HiddenTest {
     @Test
     void invalidDebitTest() {
         double amount = 200.0;
-        assertFalse(bank.debit(consumerAccountNr1, amount), "Account " + consumerAccountNr1 + " should have insufficient funds.");
-        assertFalse(bank.debit(commercialAccountNr1, amount), "Account " + commercialAccountNr1 + " should have insufficient funds.");
+        assertFalse(bank.debit(johnDoeAccount, amount), "Account " + johnDoeAccount + " should have insufficient funds.");
+        assertFalse(bank.debit(bigCorp1Account, amount), "Account " + bigCorp1Account + " should have insufficient funds.");
     }
 
     /**
@@ -125,42 +129,38 @@ class HiddenTest {
     @Test
     void creditAccountTest() {
         double amount = 500.00;
-        double initialBalance1 = bank.getBalance(consumerAccountNr1);
-        double initialBalance2 = bank.getBalance(consumerAccountNr2);
-        double initialBalance3 = bank.getBalance(consumerAccountNr3);
-        double initialBalance4 = bank.getBalance(commercialAccountNr1);
-        double initialBalance5 = bank.getBalance(commercialAccountNr2);
+        double initialBalance1 = bank.getBalance(johnDoeAccount);
+        double initialBalance2 = bank.getBalance(juliaDoeAccount);
+        double initialBalance3 = bank.getBalance(danielSmithAccount1);
+        double initialBalance4 = bank.getBalance(bigCorp1Account);
+        double initialBalance5 = bank.getBalance(bigCorp2Account);
 
-        bank.credit(consumerAccountNr1, amount);
-        bank.credit(consumerAccountNr2, amount);
-        bank.credit(consumerAccountNr3, amount);
-        bank.credit(commercialAccountNr1, amount);
-        bank.credit(commercialAccountNr2, amount);
+        bank.credit(johnDoeAccount, amount);
+        bank.credit(juliaDoeAccount, amount);
+        bank.credit(danielSmithAccount1, amount);
+        bank.credit(bigCorp1Account, amount);
+        bank.credit(bigCorp2Account, amount);
 
-        assertEquals(initialBalance1 + amount, bank.getBalance(consumerAccountNr1), 0);
-        assertEquals(initialBalance2 + amount, bank.getBalance(consumerAccountNr2), 0);
-        assertEquals(initialBalance3 + amount, bank.getBalance(consumerAccountNr3), 0);
-        assertEquals(initialBalance4 + amount, bank.getBalance(commercialAccountNr1), 0);
-        assertEquals(initialBalance5 + amount, bank.getBalance(commercialAccountNr2), 0);
+        assertEquals(initialBalance1 + amount, bank.getBalance(johnDoeAccount), 0);
+        assertEquals(initialBalance2 + amount, bank.getBalance(juliaDoeAccount), 0);
+        assertEquals(initialBalance3 + amount, bank.getBalance(danielSmithAccount1), 0);
+        assertEquals(initialBalance4 + amount, bank.getBalance(bigCorp1Account), 0);
+        assertEquals(initialBalance5 + amount, bank.getBalance(bigCorp2Account), 0);
     }
 
     /**
      * Tests {@link Transaction}: an attempt to access an account with an invalid PIN must throw an
      * Exception.
-     *
-     * @throws Exception Account validation failed.
      */
     @Test
     void transactionWithInvalidPinTest() {
-        assertThrows(Exception.class, () -> new Transaction(bank, consumerAccountNr1, 9999));
+        assertThrows(AuthenticationException.class, () -> new Transaction(bank, johnDoeAccount, 9999));
     }
 
     @Test
     void transactionDebitTest() throws Exception {
-        Transaction transaction1 = new Transaction(bank, consumerAccountNr3, 3333);
-        double beforeDeposit1 = transaction1.getBalance();
+        Transaction transaction1 = new Transaction(bank, danielSmithAccount1, 3333);
         double amount = 500.0;
-
         assertTrue(transaction1.debit(amount), "Debit was unsuccessful.");
         assertFalse(transaction1.debit(amount), "This transaction should have overdrawn the account.");
         assertTrue(transaction1.debit(transaction1.getBalance()), "Debit was unsuccessful.");
@@ -169,7 +169,7 @@ class HiddenTest {
 
     @Test
     void transactionCreditTest() throws Exception {
-        Transaction transaction1 = new Transaction(bank, consumerAccountNr3, 3333);
+        Transaction transaction1 = new Transaction(bank, danielSmithAccount1, 3333);
         double beforeDeposit1 = transaction1.getBalance();
         double amount = 9999999.0;
         transaction1.credit(amount);
@@ -178,24 +178,24 @@ class HiddenTest {
 
     @Test
     void invalidBankTransactionTest() {
-        assertThrows(Exception.class, () -> {
-            new Transaction(null, consumerAccountNr3, 3333);
-            new Transaction(bank, null, 3333);
-        });
+        assertAll(
+            () -> assertThrows(MissingDataException.class, () -> new Transaction(null, danielSmithAccount1, 3333)),
+            () -> assertThrows(MissingDataException.class, () -> new Transaction(bank, null, 3333))
+        );
     }
 
     @Test
     void invalidAccountNrTransactionTest()  {
-        assertThrows(Exception.class, () -> new Transaction(bank, null, 3333));
+        assertThrows(MissingDataException.class, () -> new Transaction(bank, null, 3333));
     }
 
     @Test
     void invalidPinTransactionTest() {
-        assertThrows(Exception.class, () -> new Transaction(bank, consumerAccountNr3, Integer.MAX_VALUE));
+        assertThrows(AuthenticationException.class, () -> new Transaction(bank, danielSmithAccount1, Integer.MAX_VALUE));
     }
 
     @Test
-    void getAverageBalanceReportTest() throws Exception {
+    void getAverageBalanceReportTest() {
         assertEquals(287.5, bank.getAverageBalanceReport().getOrDefault(ConsumerAccount.class.getSimpleName(), 0.0), 0);
         assertEquals(6172.5, bank.getAverageBalanceReport().getOrDefault(CommercialAccount.class.getSimpleName(), 0.0), 0);
     }

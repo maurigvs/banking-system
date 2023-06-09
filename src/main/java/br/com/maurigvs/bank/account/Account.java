@@ -7,42 +7,45 @@ import br.com.maurigvs.bank.accountholder.AccountHolder;
  */
 public abstract class Account implements AccountInterface {
 
-    private AccountHolder accountHolder;
-    private Long accountNumber;
-    private int pin;
+    private final Long number;
+    private final AccountHolder accountHolder;
+    private final int pinCode;
     private double balance;
 
-    protected Account(AccountHolder accountHolder, Long accountNumber, int pin, double startingDeposit) {
+    protected Account(Long number, AccountHolder accountHolder, int pinCode, double initialBalance) {
+        this.number = number;
         this.accountHolder = accountHolder;
-        this.accountNumber = accountNumber;
-        this.pin = pin;
-        creditAccount(startingDeposit);
+        this.pinCode = pinCode;
+        credit(initialBalance);
     }
 
     public AccountHolder getAccountHolder() {
-        return this.accountHolder;
+        return accountHolder;
     }
 
-    public boolean validatePin(int attemptedPin) {
-        return this.pin == attemptedPin;
+    public Long getNumber() {
+        return number;
     }
 
     public double getBalance() {
-        return this.balance;
+        return balance;
     }
 
-    public Long getAccountNumber() {
-        return this.accountNumber;
+    @Override
+    public boolean validatePin(int pinCode) {
+        return this.pinCode == pinCode;
     }
 
-    public void creditAccount(double amount) {
-        this.balance += amount;
+    @Override
+    public void credit(double amount) {
+        balance += amount;
     }
 
-    public boolean debitAccount(double amount) {
-        if(this.balance < amount)
+    @Override
+    public boolean debit(double amount) {
+        if(balance < amount)
             return false;
-        this.balance -= amount;
+        balance -= amount;
         return true;
     }
 }

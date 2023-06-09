@@ -8,23 +8,25 @@ public interface AccountInterface {
     /**
      * Validate the PIN.
      *
-     * @param attemptedPin The attempted PIN.
-     * @return <code>true</code> if attemptedPin matches the account; <code>false</code> otherwise.
+     * @param pinCode   The attempted PIN.
+     * @return          <code>true</code> if attemptedPin matches the account;
+     *                  <code>false</code> otherwise.
      */
-    public boolean validatePin(int attemptedPin);
+    boolean validatePin(int pinCode);
 
     /**
      * Add amount to account balance.
      *
-     * @param amount The amount to be deposited into the account.
+     * @param amount    The amount to be deposited into the account.
      */
-    public void creditAccount(double amount);
+    void credit(double amount);
 
     /**
      * Withdraw amount from account (if possible).
      *
-     * @param amount The amount to be withdrawn from the account.
-     * @return <code>true</code>  if amount could be withdrawn; <code>false</code> otherwise.
+     * @param amount    The amount to be withdrawn from the account.
+     * @return          <code>true</code>  if amount could be withdrawn;
+     *                  <code>false</code> otherwise.
      */
-    public boolean debitAccount(double amount);
+    boolean debit(double amount);
 }
