@@ -4,7 +4,6 @@ import br.com.maurigvs.bank.account.CommercialAccount;
 import br.com.maurigvs.bank.account.ConsumerAccount;
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
-import br.com.maurigvs.bank.bank.Bank;
 import br.com.maurigvs.bank.bank.BankInterface;
 import br.com.maurigvs.bank.exception.AuthenticationException;
 import br.com.maurigvs.bank.exception.MissingDataException;
@@ -30,7 +29,6 @@ class HiddenTest {
 
     @BeforeEach
     void setUp() {
-        bank = new Bank();
         johnDoe = new Person(1L,"John", "Doe");
         juliaDoe = new Person(2L,"Julia", "Doe");
         danielSmith = new Person(3L,"Daniel", "Smith");
@@ -124,7 +122,7 @@ class HiddenTest {
     }
 
     /**
-     * Test crediting accounts inside {@link Bank}.
+     * Test crediting accounts inside {@link br.com.maurigvs.bank.bank.Bank}.
      */
     @Test
     void creditAccountTest() {

@@ -2,7 +2,6 @@ package br.com.maurigvs.bank;
 
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
-import br.com.maurigvs.bank.bank.Bank;
 import br.com.maurigvs.bank.bank.BankInterface;
 import br.com.maurigvs.bank.transaction.Transaction;
 import org.junit.jupiter.api.AfterEach;
@@ -28,7 +27,6 @@ class SampleTest {
 
     @BeforeEach
     void setUp() {
-        bank = new Bank();
         person1 = new Person(1L,"John", "Doe");
         person2 = new Person(2L,"Julia", "Doe");
         person3 = new Person(3L,"Daniel", "Smith");
@@ -86,7 +84,7 @@ class SampleTest {
     }
 
     /**
-     * Test crediting accounts inside {@link Bank}.
+     * Test crediting accounts inside {@link br.com.maurigvs.bank.bank.Bank}.
      */
     @Test
     void creditAccountTest() {

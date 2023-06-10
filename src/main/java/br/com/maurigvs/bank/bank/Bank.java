@@ -1,9 +1,6 @@
 package br.com.maurigvs.bank.bank;
 
-import br.com.maurigvs.bank.account.Account;
-import br.com.maurigvs.bank.account.AccountService;
-import br.com.maurigvs.bank.account.CommercialAccount;
-import br.com.maurigvs.bank.account.ConsumerAccount;
+import br.com.maurigvs.bank.account.*;
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
 
@@ -16,7 +13,11 @@ public class Bank implements BankInterface {
 
     private final LinkedHashMap<Long, Account> accounts = new LinkedHashMap<>();
 
-    private final AccountService accountService = new AccountService();
+    private final AccountService accountService;
+
+    public Bank(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     public Long openCommercialAccount(Company company, int pinCode, double initialBalance) {
