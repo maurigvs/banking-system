@@ -4,7 +4,8 @@ import br.com.maurigvs.bank.account.CommercialAccount;
 import br.com.maurigvs.bank.account.ConsumerAccount;
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
-import br.com.maurigvs.bank.bank.BankInterface;
+import br.com.maurigvs.bank.bank.BankService;
+import br.com.maurigvs.bank.bank.BankServiceImpl;
 import br.com.maurigvs.bank.exception.AuthenticationException;
 import br.com.maurigvs.bank.exception.MissingDataException;
 import br.com.maurigvs.bank.transaction.Transaction;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HiddenTest {
 
-    BankInterface bank;
+    BankService bank;
     Long johnDoeAccount;
     Long juliaDoeAccount;
     Long danielSmithAccount1;
@@ -122,7 +123,7 @@ class HiddenTest {
     }
 
     /**
-     * Test crediting accounts inside {@link br.com.maurigvs.bank.bank.Bank}.
+     * Test crediting accounts inside {@link BankServiceImpl}.
      */
     @Test
     void creditAccountTest() {

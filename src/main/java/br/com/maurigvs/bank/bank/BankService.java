@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Bank interface defining the contract to interact with such an entity.
  */
-public interface BankInterface {
+public interface BankService {
 
     /**
      * Creates a new commercial account.

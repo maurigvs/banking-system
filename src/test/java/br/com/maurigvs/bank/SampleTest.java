@@ -2,7 +2,8 @@ package br.com.maurigvs.bank;
 
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
-import br.com.maurigvs.bank.bank.BankInterface;
+import br.com.maurigvs.bank.bank.BankService;
+import br.com.maurigvs.bank.bank.BankServiceImpl;
 import br.com.maurigvs.bank.transaction.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,7 @@ import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 class SampleTest {
 
-    BankInterface bank;
+    BankService bank;
     Long consumerAccountNr1;
     Long consumerAccountNr2;
     Long consumerAccountNr3;
@@ -84,7 +85,7 @@ class SampleTest {
     }
 
     /**
-     * Test crediting accounts inside {@link br.com.maurigvs.bank.bank.Bank}.
+     * Test crediting accounts inside {@link BankServiceImpl}.
      */
     @Test
     void creditAccountTest() {

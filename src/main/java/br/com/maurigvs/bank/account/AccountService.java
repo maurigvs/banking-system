@@ -2,6 +2,8 @@ package br.com.maurigvs.bank.account;
 
 import br.com.maurigvs.bank.accountholder.Person;
 
+import java.util.Map;
+
 /**
  * The public contract for an Account.
  */
@@ -47,4 +49,12 @@ public interface AccountService {
      *                  <code>false</code> otherwise.
      */
     boolean isAuthorizedUser(Long commercialAccountNumber, Person person);
+
+    double getBalance(Long accountNumber);
+
+    Long openAccount(Account account);
+
+    boolean exists(Long accountNumber);
+
+    Map<Long, Account> mapAllAccounts();
 }

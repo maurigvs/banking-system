@@ -1,6 +1,6 @@
 package br.com.maurigvs.bank.transaction;
 
-import br.com.maurigvs.bank.bank.BankInterface;
+import br.com.maurigvs.bank.bank.BankService;
 import br.com.maurigvs.bank.exception.AuthenticationException;
 import br.com.maurigvs.bank.exception.MissingDataException;
 
@@ -9,7 +9,7 @@ import br.com.maurigvs.bank.exception.MissingDataException;
  */
 public class Transaction implements TransactionInterface {
 
-    private final BankInterface bank;
+    private final BankService bank;
     private final Long accountNumber;
 
     /**
@@ -19,7 +19,7 @@ public class Transaction implements TransactionInterface {
      * @param pinCode       The PIN entered by the customer.
      * @throws AuthenticationException   Account validation failed.
      */
-    public Transaction(BankInterface bank, Long accountNumber, int pinCode) {
+    public Transaction(BankService bank, Long accountNumber, int pinCode) {
         checkArguments(bank, accountNumber, pinCode);
         this.bank = bank;
         this.accountNumber = accountNumber;
@@ -41,7 +41,7 @@ public class Transaction implements TransactionInterface {
         return bank.debit(accountNumber, amount);
     }
 
-    private void checkArguments(BankInterface bank, Long accountNumber, int pinCode) {
+    private void checkArguments(BankService bank, Long accountNumber, int pinCode) {
         if(bank == null || accountNumber == null || pinCode == 0)
             throw new MissingDataException();
     }

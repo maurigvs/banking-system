@@ -4,6 +4,9 @@ import br.com.maurigvs.bank.accountholder.Person;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -45,6 +48,26 @@ public class AccountServiceImpl implements AccountService {
     public boolean isAuthorizedUser(Long accountNumber, Person person) {
         CommercialAccount account = (CommercialAccount) getAccountByNumber(accountNumber);
         return account.getAuthorizedUsers().contains(person);
+    }
+
+    @Override
+    public double getBalance(Long accountNumber) {
+        return getAccountByNumber(accountNumber).getBalance();
+    }
+
+    @Override
+    public Long openAccount(Account account) {
+        return repository.save(account).getNumber();
+    }
+
+    @Override
+    public boolean exists(Long accountNumber) {
+        return repository.existsById(accountNumber);
+    }
+
+    @Override
+    public Map<Long, Account> mapAllAccounts() {
+        return repository.findAll().stream().collect(Collectors.toMap(Account::getNumber, Function.identity()));
     }
 
     private Account getAccountByNumber(Long accountNumber) {
