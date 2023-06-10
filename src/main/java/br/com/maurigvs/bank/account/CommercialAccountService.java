@@ -5,7 +5,7 @@ import br.com.maurigvs.bank.accountholder.Person;
 /**
  * The public contract for an Commercial Account.
  */
-public interface CommercialAccountService {
+public interface CommercialAccountService extends AccountService {
 
     /**
      * Add person to list of authorized users.

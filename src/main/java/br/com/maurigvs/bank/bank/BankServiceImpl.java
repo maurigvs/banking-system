@@ -13,12 +13,10 @@ import java.util.*;
 @Service
 public class BankServiceImpl implements BankService {
 
-    private final AccountService accountService;
-    private final CommercialAccountService commercialAccountService;
+    private final CommercialAccountService accountService;
 
-    public BankServiceImpl(AccountService accountService, CommercialAccountService commercialAccountService) {
+    public BankServiceImpl(CommercialAccountService accountService) {
         this.accountService = accountService;
-        this.commercialAccountService = commercialAccountService;
     }
 
     @Override
@@ -61,13 +59,13 @@ public class BankServiceImpl implements BankService {
     @Override
     public void addAuthorizedUser(Long accountNumber, Person user) {
         if(accountService.exists(accountNumber))
-            commercialAccountService.addAuthorizedUser(accountNumber, user);
+            accountService.addAuthorizedUser(accountNumber, user);
     }
 
     @Override
     public boolean checkAuthorizedUser(Long accountNumber, Person user) {
         if(accountService.exists(accountNumber))
-            return commercialAccountService.isAuthorizedUser(accountNumber, user);
+            return accountService.isAuthorizedUser(accountNumber, user);
         return false;
     }
 
