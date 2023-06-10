@@ -5,7 +5,7 @@ import br.com.maurigvs.bank.accountholder.AccountHolder;
 /**
  * Abstract bank account.
  */
-public abstract class Account implements AccountInterface {
+public abstract class Account {
 
     private final Long number;
     private final AccountHolder accountHolder;
@@ -16,7 +16,7 @@ public abstract class Account implements AccountInterface {
         this.number = number;
         this.accountHolder = accountHolder;
         this.pinCode = pinCode;
-        credit(initialBalance);
+        this.balance = initialBalance;
     }
 
     public AccountHolder getAccountHolder() {
@@ -29,23 +29,5 @@ public abstract class Account implements AccountInterface {
 
     public double getBalance() {
         return balance;
-    }
-
-    @Override
-    public boolean validatePin(int pinCode) {
-        return this.pinCode == pinCode;
-    }
-
-    @Override
-    public void credit(double amount) {
-        balance += amount;
-    }
-
-    @Override
-    public boolean debit(double amount) {
-        if(balance < amount)
-            return false;
-        balance -= amount;
-        return true;
     }
 }

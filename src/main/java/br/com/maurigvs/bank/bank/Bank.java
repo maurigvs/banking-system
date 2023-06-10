@@ -1,6 +1,7 @@
 package br.com.maurigvs.bank.bank;
 
 import br.com.maurigvs.bank.account.Account;
+import br.com.maurigvs.bank.account.AccountService;
 import br.com.maurigvs.bank.account.CommercialAccount;
 import br.com.maurigvs.bank.account.ConsumerAccount;
 import br.com.maurigvs.bank.accountholder.Company;
@@ -15,6 +16,8 @@ public class Bank implements BankInterface {
 
     private final LinkedHashMap<Long, Account> accounts = new LinkedHashMap<>();
 
+    private final AccountService accountService = new AccountService();
+
     @Override
     public Long openCommercialAccount(Company company, int pinCode, double initialBalance) {
         return openAccount(new CommercialAccount(generateAccountNumber(), company, pinCode, initialBalance));
@@ -28,7 +31,7 @@ public class Bank implements BankInterface {
     @Override
     public boolean authenticateUser(Long accountNumber, int pinCode) {
         if(isValidAccount(accountNumber))
-            return accounts.get(accountNumber).validatePin(pinCode);
+            return accountService.validatePin(accountNumber, pinCode);
         return false;
     }
 
@@ -42,26 +45,26 @@ public class Bank implements BankInterface {
     @Override
     public void credit(Long accountNumber, double amount) {
         if(isValidAccount(accountNumber))
-            accounts.get(accountNumber).credit(amount);
+            accountService.credit(accountNumber, amount);
     }
 
     @Override
     public boolean debit(Long accountNumber, double amount) {
         if(isValidAccount(accountNumber))
-            return accounts.get(accountNumber).debit(amount);
+            return accountService.debit(accountNumber, amount);
         return false;
     }
 
     @Override
     public void addAuthorizedUser(Long accountNumber, Person user) {
         if(isValidCommercialAccount(accountNumber))
-            ((CommercialAccount) accounts.get(accountNumber)).addAuthorizedUser(user);
+            accountService.addAuthorizedUser(accountNumber, user);
     }
 
     @Override
     public boolean checkAuthorizedUser(Long accountNumber, Person user) {
         if(isValidCommercialAccount(accountNumber))
-            return ((CommercialAccount) accounts.get(accountNumber)).isAuthorizedUser(user);
+            return accountService.isAuthorizedUser(accountNumber, user);
         return false;
     }
 

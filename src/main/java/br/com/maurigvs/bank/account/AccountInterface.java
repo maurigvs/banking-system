@@ -1,5 +1,7 @@
 package br.com.maurigvs.bank.account;
 
+import br.com.maurigvs.bank.accountholder.Person;
+
 /**
  * The public contract for an Account.
  */
@@ -12,14 +14,14 @@ public interface AccountInterface {
      * @return          <code>true</code> if attemptedPin matches the account;
      *                  <code>false</code> otherwise.
      */
-    boolean validatePin(int pinCode);
+    boolean validatePin(Long accountNumber, int pinCode);
 
     /**
      * Add amount to account balance.
      *
      * @param amount    The amount to be deposited into the account.
      */
-    void credit(double amount);
+    void credit(Long accountNumber, double amount);
 
     /**
      * Withdraw amount from account (if possible).
@@ -28,5 +30,21 @@ public interface AccountInterface {
      * @return          <code>true</code>  if amount could be withdrawn;
      *                  <code>false</code> otherwise.
      */
-    boolean debit(double amount);
+    boolean debit(Long accountNumber, double amount);
+
+    /**
+     * Add person to list of authorized users.
+     *
+     * @param person    The authorized user to be added to the account.
+     */
+    void addAuthorizedUser(Long commercialAccountNumber, Person person);
+
+    /**
+     * Verify if the person is part of the list of authorized users for this account.
+     *
+     * @param person    The user who is supposed to be authorized.
+     * @return          <code>true</code> if person matches an authorized user in {@link #authorizedUsers};
+     *                  <code>false</code> otherwise.
+     */
+    boolean isAuthorizedUser(Long commercialAccountNumber, Person person);
 }
