@@ -1,14 +1,17 @@
 package br.com.maurigvs.bank.accountholder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import br.com.maurigvs.bank.account.CommercialAccount;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * The concrete Account holder of Person type.
  */
 @Entity
+@PrimaryKeyJoinColumn(name = "accountholder_id")
 @Table(name = "accountholder_person")
 public class Person extends AccountHolder {
 
@@ -17,6 +20,9 @@ public class Person extends AccountHolder {
 
     @Column(name = "last_name")
     private final String lastName;
+
+    @ManyToMany(mappedBy = "authorizedUsers")
+    private final List<CommercialAccount> commercialAccounts = new ArrayList<>();
 
     public Person(Long cpf, String firstName, String lastName) {
         super(cpf);
@@ -30,6 +36,10 @@ public class Person extends AccountHolder {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public List<CommercialAccount> getCommercialAccounts() {
+        return commercialAccounts;
     }
 
     @Override

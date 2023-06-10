@@ -2,9 +2,11 @@ package br.com.maurigvs.bank.accountholder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "accountholder_id")
 @Table(name = "accountholder_company")
 public class Company extends AccountHolder {
 
