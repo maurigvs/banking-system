@@ -31,17 +31,17 @@ class HiddenTest {
     @BeforeEach
     void setUp() {
         bank = new Bank();
-        johnDoe = new Person(1,"John", "Doe");
-        juliaDoe = new Person(2,"Julia", "Doe");
-        danielSmith = new Person(3,"Daniel", "Smith");
+        johnDoe = new Person(1L,"John", "Doe");
+        juliaDoe = new Person(2L,"Julia", "Doe");
+        danielSmith = new Person(3L,"Daniel", "Smith");
 
         johnDoeAccount = bank.openConsumerAccount(johnDoe, 1111, 0.0);
         juliaDoeAccount = bank.openConsumerAccount(juliaDoe, 2222, 250.00);
         danielSmithAccount1 = bank.openConsumerAccount(danielSmith, 3333, 600.00);
         danielSmithAccount2 = bank.openConsumerAccount(danielSmith, 4444, 300.00);
 
-        Company bigCorp1 = new Company(1,"BigCorp1");
-        Company bigCorp2 = new Company(2, "BigCorp2");
+        Company bigCorp1 = new Company(1L,"BigCorp1");
+        Company bigCorp2 = new Company(2L, "BigCorp2");
 
         bigCorp1Account = bank.openCommercialAccount(bigCorp1, 1111, 0.0);
         bigCorp2Account = bank.openCommercialAccount(bigCorp2, 2222, 12345.00);
@@ -63,7 +63,7 @@ class HiddenTest {
 
     @Test
     void checkAuthorizedUserTest() {
-        assertTrue(bank.checkAuthorizedUser(bigCorp1Account, new Person(1, "John", "Doe")));
+        assertTrue(bank.checkAuthorizedUser(bigCorp1Account, new Person(1L, "John", "Doe")));
         assertTrue(bank.checkAuthorizedUser(bigCorp1Account, johnDoe));
         assertTrue(bank.checkAuthorizedUser(bigCorp1Account, juliaDoe));
         assertTrue(bank.checkAuthorizedUser(bigCorp2Account, danielSmith));
@@ -71,7 +71,7 @@ class HiddenTest {
 
     @Test
     void checkUnauthorizedUserTest() {
-        assertFalse(bank.checkAuthorizedUser(bigCorp1Account, new Person(2, "John", "Doe")));
+        assertFalse(bank.checkAuthorizedUser(bigCorp1Account, new Person(2L, "John", "Doe")));
         assertFalse(bank.checkAuthorizedUser(bigCorp1Account, null));
         assertFalse(bank.checkAuthorizedUser(bigCorp1Account, danielSmith));
         assertFalse(bank.checkAuthorizedUser(bigCorp2Account, johnDoe));
@@ -158,7 +158,7 @@ class HiddenTest {
     }
 
     @Test
-    void transactionDebitTest() throws Exception {
+    void transactionDebitTest() {
         Transaction transaction1 = new Transaction(bank, danielSmithAccount1, 3333);
         double amount = 500.0;
         assertTrue(transaction1.debit(amount), "Debit was unsuccessful.");
@@ -168,7 +168,7 @@ class HiddenTest {
     }
 
     @Test
-    void transactionCreditTest() throws Exception {
+    void transactionCreditTest() {
         Transaction transaction1 = new Transaction(bank, danielSmithAccount1, 3333);
         double beforeDeposit1 = transaction1.getBalance();
         double amount = 9999999.0;

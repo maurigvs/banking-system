@@ -1,16 +1,24 @@
 package br.com.maurigvs.bank.accountholder;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
 
 /**
  * The concrete Account holder of Person type.
  */
+@Entity
+@Table(name = "accountholder_person")
 public class Person extends AccountHolder {
 
+    @Column(name = "first_name")
     private final String firstName;
+
+    @Column(name = "last_name")
     private final String lastName;
 
-    public Person(int cpf, String firstName, String lastName) {
+    public Person(Long cpf, String firstName, String lastName) {
         super(cpf);
         this.firstName = firstName;
         this.lastName = lastName;
