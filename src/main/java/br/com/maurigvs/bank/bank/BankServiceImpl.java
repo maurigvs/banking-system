@@ -1,9 +1,6 @@
 package br.com.maurigvs.bank.bank;
 
-import br.com.maurigvs.bank.account.Account;
-import br.com.maurigvs.bank.account.AccountService;
-import br.com.maurigvs.bank.account.CommercialAccount;
-import br.com.maurigvs.bank.account.ConsumerAccount;
+import br.com.maurigvs.bank.account.*;
 import br.com.maurigvs.bank.accountholder.Company;
 import br.com.maurigvs.bank.accountholder.Person;
 import org.springframework.stereotype.Service;
@@ -17,9 +14,11 @@ import java.util.*;
 public class BankServiceImpl implements BankService {
 
     private final AccountService accountService;
+    private final CommercialAccountService commercialAccountService;
 
-    public BankServiceImpl(AccountService accountService) {
+    public BankServiceImpl(AccountService accountService, CommercialAccountService commercialAccountService) {
         this.accountService = accountService;
+        this.commercialAccountService = commercialAccountService;
     }
 
     @Override
@@ -62,13 +61,13 @@ public class BankServiceImpl implements BankService {
     @Override
     public void addAuthorizedUser(Long accountNumber, Person user) {
         if(accountService.exists(accountNumber))
-            accountService.addAuthorizedUser(accountNumber, user);
+            commercialAccountService.addAuthorizedUser(accountNumber, user);
     }
 
     @Override
     public boolean checkAuthorizedUser(Long accountNumber, Person user) {
         if(accountService.exists(accountNumber))
-            return accountService.isAuthorizedUser(accountNumber, user);
+            return commercialAccountService.isAuthorizedUser(accountNumber, user);
         return false;
     }
 

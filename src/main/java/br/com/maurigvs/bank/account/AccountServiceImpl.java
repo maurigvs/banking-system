@@ -1,17 +1,15 @@
 package br.com.maurigvs.bank.account;
 
-import br.com.maurigvs.bank.accountholder.Person;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class AccountServiceImpl implements AccountService {
+class AccountServiceImpl implements AccountService {
 
-    private final AccountRepository repository;
+    protected final AccountRepository repository;
 
     public AccountServiceImpl(AccountRepository repository) {
         this.repository = repository;
@@ -39,18 +37,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void addAuthorizedUser(Long accountNumber, Person person) {
-        CommercialAccount account = getCommercialAccountByNumber(accountNumber);
-        account.getAuthorizedUsers().add(person);
-    }
-
-    @Override
-    public boolean isAuthorizedUser(Long accountNumber, Person person) {
-        CommercialAccount account = (CommercialAccount) getAccountByNumber(accountNumber);
-        return account.getAuthorizedUsers().contains(person);
-    }
-
-    @Override
     public double getBalance(Long accountNumber) {
         return getAccountByNumber(accountNumber).getBalance();
     }
@@ -70,14 +56,7 @@ public class AccountServiceImpl implements AccountService {
         return repository.findAll().stream().collect(Collectors.toMap(Account::getNumber, Function.identity()));
     }
 
-    private Account getAccountByNumber(Long accountNumber) {
+    Account getAccountByNumber(Long accountNumber) {
         return repository.findByNumber(accountNumber).orElseThrow();
-    }
-
-    private CommercialAccount getCommercialAccountByNumber(Long accountNumber){
-        Account account = getAccountByNumber(accountNumber);
-        if(!(account instanceof CommercialAccount))
-            throw new EntityNotFoundException("The account is not a commercial account");
-        return (CommercialAccount) account;
     }
 }
