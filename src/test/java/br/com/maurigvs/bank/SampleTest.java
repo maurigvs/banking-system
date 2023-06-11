@@ -36,8 +36,8 @@ class SampleTest {
         consumerAccountNr3 = bank.openConsumerAccount(person3, 3333, 600.00);
         consumerAccountNr4 = bank.openConsumerAccount(person3, 4444, 300.00);
 
-        Company company1 = new Company(1L,"BigCorp1");
-        Company company2 = new Company(2L,"BigCorp2");
+        Company company1 = new Company(1L,"BigCorp1", "BigCorp1 SA");
+        Company company2 = new Company(2L,"BigCorp2", "BigCorp2 SA");
         commercialAccountNr1 = bank.openCommercialAccount(company1, 1111, 0.0);
         commercialAccountNr2 = bank.openCommercialAccount(company2, 2222, 12345.00);
 

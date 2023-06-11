@@ -6,19 +6,23 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@PrimaryKeyJoinColumn(name = "accountholder_id")
 @Table(name = "accountholder_company")
+@PrimaryKeyJoinColumn(name = "company_id")
 public class Company extends AccountHolder {
 
     @Column(name = "company_name")
-    private final String companyName;
+    private String legalName;
 
-    public Company(Long cnpj, String companyName) {
-        super(cnpj);
-        this.companyName = companyName;
+    public Company() {
+        super();
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public Company(Long cnpj, String businessName, String legalName) {
+        super(cnpj, businessName);
+        this.legalName = legalName;
+    }
+
+    public String getLegalName() {
+        return legalName;
     }
 }

@@ -39,8 +39,8 @@ class HiddenTest {
         danielSmithAccount1 = bank.openConsumerAccount(danielSmith, 3333, 600.00);
         danielSmithAccount2 = bank.openConsumerAccount(danielSmith, 4444, 300.00);
 
-        Company bigCorp1 = new Company(1L,"BigCorp1");
-        Company bigCorp2 = new Company(2L, "BigCorp2");
+        Company bigCorp1 = new Company(1L,"BigCorp1", "BigCorp1 SA");
+        Company bigCorp2 = new Company(2L, "BigCorp2", "BigCorp2 SA");
 
         bigCorp1Account = bank.openCommercialAccount(bigCorp1, 1111, 0.0);
         bigCorp2Account = bank.openCommercialAccount(bigCorp2, 2222, 12345.00);

@@ -10,26 +10,32 @@ import java.util.List;
  * Abstract Account Holder.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "accountholder")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccountHolder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private final Long id;
+    private Long id;
+
+    private String holderName;
 
     @OneToMany(mappedBy = "accountHolder")
     private final List<Account> accounts = new ArrayList<>();
 
-    /**
-     * @param id The holder unique ID.
-     */
-    protected AccountHolder(Long id) {
+    protected AccountHolder() {}
+
+    protected AccountHolder(Long id, String holderName) {
         this.id = id;
+        this.holderName = holderName;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getHolderName() {
+        return holderName;
     }
 
     public List<Account> getAccounts() {

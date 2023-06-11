@@ -11,21 +11,25 @@ import java.util.Objects;
  * The concrete Account holder of Person type.
  */
 @Entity
-@PrimaryKeyJoinColumn(name = "accountholder_id")
 @Table(name = "accountholder_person")
+@PrimaryKeyJoinColumn(name = "person_id")
 public class Person extends AccountHolder {
 
     @Column(name = "first_name")
-    private final String firstName;
+    private String firstName;
 
     @Column(name = "last_name")
-    private final String lastName;
+    private String lastName;
 
     @ManyToMany(mappedBy = "authorizedUsers")
     private final List<CommercialAccount> commercialAccounts = new ArrayList<>();
 
+    public Person() {
+        super();
+    }
+
     public Person(Long cpf, String firstName, String lastName) {
-        super(cpf);
+        super(cpf, firstName + " " + lastName);
         this.firstName = firstName;
         this.lastName = lastName;
     }
